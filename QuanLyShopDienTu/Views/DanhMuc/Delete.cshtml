@@ -1,0 +1,27 @@
+﻿@model QuanLyShopDienTu.Models.DanhMuc
+
+@{
+    ViewData["Title"] = "Xóa Danh Mục";
+}
+
+<h1>Xóa Danh Mục</h1>
+
+<h3>Bạn có chắc chắn muốn xóa danh mục này?</h3>
+<div class="alert alert-danger">
+    Lưu ý: Việc xóa danh mục có thể ảnh hưởng đến các sản phẩm thuộc danh mục này.
+</div>
+
+<div>
+    <h4>Thông tin Danh Mục</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TenDanhMuc)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.TenDanhMuc)</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Màu chủ đạo (Xanh dương đậm gradient giống ảnh mẫu) */
+            --sidebar-bg: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+            --sidebar-width: 260px;
+            --text-sidebar: rgba(255, 255, 255, 0.8);
+            --text-sidebar-hover: #fff;
+            --bg-body: #f8f9fc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            background: var(--sidebar-bg);
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+            .sidebar .brand {
+                height: 70px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                font-size: 1.2rem;
+                color: white;
+                text-decoration: none;
+                border-bottom: 1px solid rgba(255,255,255,0.15);
+                margin-bottom: 1rem;
+            }
+
+            .sidebar .nav-link {
+                color: var(--text-sidebar);
+                padding: 14px 20px;
+                margin: 0 15px 5px 15px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+            }
+
+                .sidebar .nav-link i {
+                    width: 24px;
+                    text-align: center;
+                    margin-right: 10px;
+                    font-size: 1rem;
+                }
+
+                .sidebar .nav-link:hover {
+                    color: var(--text-sidebar-hover);
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: translateX(3px);
+                }
+
+                /* Trạng thái Active (Đang chọn) */
+                .sidebar .nav-link.active {
+                    color: #4e73df; /* Chữ màu xanh */
+                    background: white; /* Nền trắng */
+                    font-weight: 700;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px 30px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- TOP NAVBAR --- */
+        .top-navbar {
+            background: white;
+            border-radius: 12px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .breadcrumb-item a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #e3e6f0;
+            color: #858796;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    @{
+        // Lấy tên Controller từ URL (ví dụ: SanPham, DanhMuc, Home)
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    }
+
+    <div class="sidebar d-flex flex-column">
+        <a href="/" class="brand">
+            <i class="fas fa-laugh-wink me-2"></i> ADMIN SHOP
+        </a>
+
+        <ul class="nav flex-column mb-auto">
+
+            <div class="small text-uppercase fw-bold text-white-50 px-4 mt-2 mb-2" style="font-size: 0.7rem;">Trang chủ</div>
+
+            <li class="nav-item">
+                <a href="@Url.Action("Index", "Home")"
+                   class="nav-link @(currentController == "Home" ? "active" : "")">
+                    <i class="fas fa-chart-line"></i> Tổng quan
+                </a>
+            </li>
+
+            <div class="small text-uppercase fw-bold text-white-50 px-4 mt-3 mb-2" style="font-size: 0.7rem;">Quản lý kho</div>
+
+            <li class="nav-item">
+                <a href="@Url.Action("Index", "DanhMuc")"
+                   class="nav-link @(currentController == "DanhMuc" ? "active" : "")">
+                    <i class="fas fa-folder"></i> Quản lý Danh mục
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="@Url.Action("Index", "SanPham")"
+                   class="nav-link @(currentController == "SanPham" ? "active" : "")">
+                    <i class="fas fa-box-open"></i> Quản lý Sản phẩm
+                </a>
+            </li>
+
+            <div class="small text-uppercase fw-bold text-white-50 px-4 mt-3 mb-2" style="font-size: 0.7rem;">Hệ thống</div>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-users"></i> Khách hàng
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cog"></i> Cài đặt
+                </a>
+            </li>
+        </ul>
+
+        <div class="p-3">
+            <div class="p-3 rounded bg-white bg-opacity-10 text-center text-white small">
+                <i class="fas fa-headset mb-2"></i><br>
+                Hỗ trợ kỹ thuật
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div class="top-navbar">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        @(currentController == "Home" ? "Tổng quan" :
+                                                currentController == "DanhMuc" ? "Danh mục" :
+                                                currentController == "SanPham" ? "Sản phẩm" : currentController)
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none text-dark dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong>Admin</strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+                        <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @RenderBody()
+
+        <footer class="footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Quản Lý Shop Điện Tử 2025</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

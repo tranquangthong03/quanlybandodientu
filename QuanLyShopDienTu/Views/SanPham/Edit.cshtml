@@ -1,0 +1,245 @@
+﻿@model QuanLyShopDienTu.Models.SanPham
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Sản Phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    :root {
+        --purity-teal: #4fd1c5;
+        --text-gray: #a0aec0;
+        --text-dark: #2d3748;
+    }
+
+    /* Card container */
+    .card-purity {
+        background: #fff;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        padding: 24px;
+        height: auto; /* Để height auto để tránh lỗi tràn nội dung */
+    }
+
+    /* Label style */
+    .form-label-custom {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-gray);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    /* Input fields */
+    .form-control-custom, .form-select-custom {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+        transition: all 0.2s;
+    }
+
+        .form-control-custom:focus, .form-select-custom:focus {
+            border-color: var(--purity-teal);
+            box-shadow: 0 0 0 2px rgba(79, 209, 197, 0.2);
+        }
+
+    /* Image Preview Area */
+    .image-upload-container {
+        border: 2px dashed #e2e8f0;
+        border-radius: 15px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        min-height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        overflow: hidden;
+        background: #fff;
+    }
+
+        .image-upload-container:hover {
+            border-color: var(--purity-teal);
+            background-color: #f7fafc;
+        }
+
+    .image-preview {
+        max-width: 100%;
+        max-height: 230px;
+        border-radius: 10px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .upload-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        padding: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transform: translateY(100%);
+        transition: transform 0.3s;
+    }
+
+    .image-upload-container:hover .upload-overlay {
+        transform: translateY(0);
+    }
+
+    /* Buttons */
+    .btn-save {
+        background: linear-gradient(135deg, #4fd1c5 0%, #319795 100%);
+        color: white;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 10px 30px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+    }
+
+        .btn-save:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+    .btn-back {
+        background: #e2e8f0;
+        color: var(--text-dark);
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 10px 20px;
+        text-decoration: none;
+        border: none;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background: #cbd5e0;
+            transform: translateY(-1px);
+        }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="text-muted small">Pages / Quản lý sản phẩm</span>
+            <h3 class="font-weight-bold text-dark mb-0">Chỉnh Sửa Sản Phẩm</h3>
+        </div>
+        <div class="text-muted small">
+            ID Sản phẩm: <strong class="text-primary">#@Model.Id</strong>
+        </div>
+    </div>
+
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="HinhAnhUrl" />
+
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="card-purity h-100">
+                    <h5 class="font-weight-bold mb-4 text-dark">Thông tin chi tiết</h5>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="TenSanPham" class="form-label-custom">Tên Sản Phẩm</label>
+                        <input asp-for="TenSanPham" class="form-control form-control-custom" placeholder="Nhập tên sản phẩm..." />
+                        <span asp-validation-for="TenSanPham" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="DanhMucId" class="form-label-custom">Danh Mục</label>
+                            <select asp-for="DanhMucId" class="form-select form-select-custom" asp-items="ViewBag.DanhMucId"></select>
+                            <span asp-validation-for="DanhMucId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="SoLuong" class="form-label-custom">Số Lượng Kho</label>
+                            <input asp-for="SoLuong" class="form-control form-control-custom" type="number" />
+                            <span asp-validation-for="SoLuong" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="GiaTien" class="form-label-custom">Giá Bán (VNĐ)</label>
+                        <div class="input-group">
+                            <input asp-for="GiaTien" class="form-control form-control-custom" type="number" step="1000" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                            <span class="input-group-text bg-light text-secondary font-weight-bold" style="border-radius: 0 12px 12px 0; border: 1px solid #e2e8f0;">VNĐ</span>
+                        </div>
+                        <span asp-validation-for="GiaTien" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="MoTa" class="form-label-custom">Mô Tả Sản Phẩm</label>
+                        <textarea asp-for="MoTa" class="form-control form-control-custom" rows="5" placeholder="Mô tả chi tiết..."></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card-purity mb-4">
+                    <h5 class="font-weight-bold mb-3 text-dark">Hình Ảnh</h5>
+                    <p class="text-xs text-muted mb-3">Nhấn vào ảnh để thay đổi.</p>
+
+                    <input type="file" name="HinhAnh" id="fileInput" class="d-none" accept="image/*" onchange="previewImage(event)" />
+
+                    <div class="image-upload-container shadow-sm" onclick="document.getElementById('fileInput').click()">
+                        <img id="imagePreview" class="image-preview"
+                             src="~/images/products/@Model.HinhAnhUrl"
+                             onerror="this.src='https://via.placeholder.com/300?text=No+Image'"
+                             alt="Ảnh sản phẩm" />
+
+                        <div class="upload-overlay">
+                            <i class="fas fa-camera me-1"></i> Nhấn để tải ảnh mới
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-purity d-flex flex-column gap-3 text-center mb-5">
+                    <button type="submit" class="btn btn-save w-100 py-3">
+                        <i class="fas fa-save me-2"></i> LƯU THAY ĐỔI
+                    </button>
+                    <a asp-action="Index" class="btn btn-back w-100 py-2">
+                        <i class="fas fa-arrow-left me-2"></i> Hủy bỏ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Hàm xem trước ảnh khi người dùng chọn file mới
+        function previewImage(event) {
+            var reader = new FileReader();
+            var imageField = document.getElementById("imagePreview");
+
+            reader.onload = function () {
+                if (reader.readyState == 2) {
+                    imageField.src = reader.result;
+                }
+            }
+
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+    </script>
+}

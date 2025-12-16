@@ -1,0 +1,220 @@
+﻿@model IEnumerable<QuanLyShopDienTu.Models.SanPham>
+
+@{
+    ViewData["Title"] = "Quản Lý Sản Phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    /* Màu chủ đạo Teal */
+    :root {
+        --purity-teal: #4fd1c5;
+        --purity-teal-hover: #38b2ac;
+        --text-secondary: #a0aec0;
+        --text-primary: #2d3748;
+    }
+
+    /* Style cho bảng */
+    .table > :not(caption) > * > * {
+        padding: 1rem 1rem;
+        border-bottom-width: 1px;
+        box-shadow: inset 0 0 0 9999px transparent;
+    }
+
+    .text-xs {
+        font-size: 0.75rem !important;
+    }
+
+    .text-sm {
+        font-size: 0.875rem !important;
+    }
+
+    .font-weight-bold {
+        font-weight: 600 !important;
+    }
+
+    .text-secondary {
+        color: var(--text-secondary) !important;
+    }
+
+    /* Avatar ảnh sản phẩm */
+    .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+        .avatar:hover {
+            transform: scale(1.1);
+        }
+
+    /* Nút thêm mới */
+    .btn-purity-primary {
+        background: linear-gradient(310deg, #4fd1c5 0%, #2cb6aa 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        padding: 10px 24px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+        .btn-purity-primary:hover {
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+
+    /* Badge trạng thái */
+    .badge-status {
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .bg-gradient-success {
+        background: linear-gradient(310deg, #17ad37 0%, #98ec2d 100%);
+        color: white;
+    }
+
+    .bg-gradient-secondary {
+        background: linear-gradient(310deg, #627594 0%, #a8b8d8 100%);
+        color: white;
+    }
+
+    .bg-gradient-warning {
+        background: linear-gradient(310deg, #f53939 0%, #fbcf33 100%);
+        color: white;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Sản phẩm</li>
+                </ol>
+            </nav>
+            <h6 class="font-weight-bolder mb-0">Danh sách sản phẩm</h6>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Create" class="btn btn-purity-primary mb-0">
+                <i class="fas fa-plus me-2"></i> Thêm Sản Phẩm
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-white" role="alert" style="background-image: linear-gradient(310deg, #17ad37 0%, #98ec2d 100%); border:0;">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4 border-0 shadow-sm" style="border-radius: 15px;">
+                <div class="card-header pb-0 bg-white" style="border-radius: 15px 15px 0 0;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Bảng dữ liệu</h6>
+                        <form asp-action="Index" method="get" class="d-flex align-items-center">
+                            <div class="input-group">
+                                <span class="input-group-text text-body border-0 bg-gray-100"><i class="fas fa-search" aria-hidden="true"></i></span>
+                                <input type="text" name="searchString" class="form-control border-0 bg-gray-100" placeholder="Tìm tên sản phẩm..." value="@ViewData["CurrentFilter"]">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0 align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">Sản phẩm</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Giá tiền</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Danh mục</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-3 py-1">
+                                                    <div>
+                                                        <img src="~/images/products/@item.HinhAnhUrl" class="avatar me-3" alt="@item.TenSanPham"
+                                                             onerror="this.src='https://via.placeholder.com/150'">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">@item.TenSanPham</h6>
+                                                        <p class="text-xs text-secondary mb-0">ID: #@item.Id</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p class="text-sm font-weight-bold mb-0 text-dark">
+                                                    @item.GiaTien.ToString("N0") <span class="text-xs">đ</span>
+                                                </p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                @if (item.SoLuong > 10)
+                                                {
+                                                    <span class="badge badge-status bg-gradient-success">Còn hàng (@item.SoLuong)</span>
+                                                }
+                                                else if (item.SoLuong > 0)
+                                                {
+                                                    <span class="badge badge-status bg-gradient-warning">Sắp hết (@item.SoLuong)</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-status bg-gradient-secondary">Hết hàng</span>
+                                                }
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <span class="text-secondary text-xs font-weight-bold">@item.DanhMuc.TenDanhMuc</span>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-secondary font-weight-bold text-xs me-3" data-toggle="tooltip" title="Chỉnh sửa">
+                                                    <i class="fas fa-edit fa-lg text-info"></i>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="text-secondary font-weight-bold text-xs"
+                                                   onclick="return confirm('Bạn có chắc muốn xóa sản phẩm: @item.TenSanPham?')" title="Xóa">
+                                                    <i class="fas fa-trash-alt fa-lg text-danger"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="fas fa-box-open fa-3x text-secondary mb-3 opacity-5"></i>
+                                                <span class="text-secondary">Chưa có sản phẩm nào.</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<QuanLyShopDienTu.Models.SanPham>
+
+@{
+    ViewData["Title"] = "Trang Chủ - Cửa hàng Điện Tử";
+}
+
+<div class="text-center py-4 bg-light mb-4 rounded-3">
+    <h1 class="display-5 fw-bold">Sản Phẩm Nổi Bật</h1>
+    <p class="col-md-8 fs-5 mx-auto text-muted">Quản lý và xuất nhập dữ liệu dễ dàng.</p>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info mt-3">@TempData["Message"]</div>
+    }
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        <a href="@Url.Action("ExportToXml", "Home")" class="btn btn-primary btn-lg">
+            <i class="fas fa-file-export"></i> Xuất Dữ liệu ra XML
+        </a>
+
+        <form asp-action="ImportFromXml" method="post" enctype="multipart/form-data" class="d-flex align-items-center">
+            <input type="file" name="xmlFile" class="form-control me-2" required />
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-file-import"></i> Nhập Dữ liệu từ XML
+            </button>
+        </form>
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        <a asp-controller="SanPham" asp-action="Index" class="btn btn-warning btn-lg">
+            <i class="fas fa-box-open"></i> Quản Lý SẢN PHẨM
+        </a>
+
+        <a asp-controller="DanhMuc" asp-action="Index" class="btn btn-info btn-lg text-white">
+            <i class="fas fa-tags"></i> Quản Lý DANH MỤC
+        </a>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+
+                    <div style="height: 200px; overflow: hidden;"
+                         class="bg-white rounded-top d-flex align-items-center justify-content-center border-bottom">
+                        <img src="~/images/products/@item.HinhAnhUrl" class="card-img-top" alt="@item.TenSanPham"
+                             style="max-height: 100%; max-width: 100%; object-fit: contain; padding: 10px;">
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">@item.DanhMuc.TenDanhMuc</span>
+                        <h5 class="card-title text-primary">@item.TenSanPham</h5>
+                        <p class="card-text text-muted small">@item.MoTa</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 mb-0 text-danger fw-bold">
+                                @item.GiaTien.ToString("N0") đ
+                            </span>
+                            <span class="badge bg-info text-dark">Kho: @item.SoLuong</span>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-top-0 pb-3">
+                        <button class="btn btn-outline-success w-100">Mua ngay</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
